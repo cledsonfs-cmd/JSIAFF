@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Text Recognition</title>
+</head>
+
+<body style="font-family:Tahoma;font-size:11px;">
+<h2>TEXT RECOGNITION WITH NEURAL NETWORKS HOWTO</h2>
+<p>Neural networks are one technique which can be  used for text recognition. 
+ Text recognition application uses artificial neural network to recognize text characters from image (scanned documents, photography etc.), using Image Recognition, and transforms them into editable document (as MS Word .doc or Notepad and Wordpad .txt file). It is based on neural network that can learn to recognize more characters.</p>
+<p>This tutorial will explain the following:</p>
+<p>
+1. How to train neural networks for text recognition with easyNeurons <br />
+2. How to use neural networks trained for text recognition in your applications </p>
+<h3>1. Training Neural Network for Text Recognition with easyNeurons</h3>
+<p><strong>easyNeurons</strong> provides environment for creating and training neural networks, which can be saved as ready-to-use java components. Also it provides specialised text recognition tool to train neural networks for text recognition. Creating and training neural network for text recognition consists of the following steps: </p>
+<p>1. Draw letters whitch should be recognized and create training set <br />
+  2. Create neural network<br />
+  3. Train neural network
+  <br />
+4. Test neural network <br />
+5. Save &amp; deploy neural network</p>
+
+<p>To start Text Recognition tool choose [Main manu &gt; Tools &gt; Text Recognition] </p>
+<p><img src="images/Menu_textRecognition.jpg" width="899" height="644" /></p>
+<p><strong>Step 1.</strong> Create Training Set <br />
+In this step we need to create image of characters that should be recognized. We do this in'Training set' tab.
+First choose Font Style, for example Arial and leave the default font size. For training set label write 'Arial'. Leave the default Image Sampling Resolution and click '<strong>Create Training Set</strong>' button.</p>
+<p><img src="images/TextRecognitionCreateTrainingSet.jpg" width="727" height="510" /></p>
+<p>Image of Characters to learn will appear in the right area. Click '<strong>Next</strong>' button to proceed to the next step. </p>  
+<p><img src="images/TextRecNext.jpg" width="891" height="587" /></p>
+<p><strong>Step 2.</strong> Create neural network </p>
+<p>The next thing to do is to create the neural network. </p>
+<p><img src="images/NewNeuralNetworktextRec.jpg" width="727" height="510" /></p>
+<p>To create the neural network you need to enter the following: </p>
+<p><strong>Network label</strong> - The label for the neural network, which is usefull when you create several neural networks for the same problem, and  you're  comparing them.<br />
+    <strong>Transfer function</strong> - This  setting determines which transfer function will be used by the neurons. In most cases you can leave the default settings 'Sigmoid', but sometimes using 'Tanh' can give you  better results. <br />
+<strong>Hidden Layers Neuron Counts</strong> - This is the most important setting which determines the number of hidden layers in network, and number of neurons in each hidden layer. Hidden layers are  layers between input and output layer. The trick is to have the smallest possible number of layers and neurons which can succesfully learn the training set. The smaller number of neurons - the faster learning, better generalization. Suitable number of  hidden neurons also depends of the number of input and output neurons, and the best value can be figured out by experimenting. For  start, try one hidden layer with 12 neurons. Name the network 'Text' and click the '<strong>Create Neural Network</strong>' button to create the neural network. After you click the button new window with created neural network will open.</p>
+<p><strong>Step 3.</strong> Train network</p>
+<p>To train the network select the training set from the list and click the '<strong>Train</strong>' button. This will open the dialog for setting learning parameters. Enter the Learning Rate value 0.2 and just click the '<strong>Train</strong>' button.</p>
+<p><img src="images/TextRecTrain.jpg" width="727" height="510" /></p>
+<p>This will start training and open network learning graph and iteration counter, so you can obesrve the learning process. If the learning gets stuck (total network error does not go down), you can try with different number of neurons, layers or learning parameters. For learning rate and momentum use the values between [0, 1] , and for the error some small value bellow 0.1 is recommended. </p>
+<p><img src="images/Graph.jpg" width="666" height="418" /></p>
+<p> <strong>Step 4.</strong> Test Network  </p>
+<p>After you have trained the network you can try how it works in the test panel. Click '<strong>Load Text Image </strong>' button to set input image for the network. </p>
+<p><img src="images/selectIMagewithText.jpg" width="723" height="562" /></p>
+<p>Image of Characters will appear in Loaded Image area. Click the '<strong>Recognize>></strong>' button.</p>
+<p><img src="images/Recognize.jpg" width="723" height="508" /></p>
+ Recognized text will appear in 'Recognized Text' area.</p>
+<p><img src="images/textRecognized.jpg" width="723" height="508" /></p>
+<p>To save recognized text, click the small button above the recognized text area </p>
+<p><img src="images/savetext.jpg" width="723" height="548" /></p>
+<p>Enter the name and file type, for example .txt and click '<strong>Enter File To Save</strong>'</p>
+<p>File will be saved as .txt file</p>
+<p><img src="images/savedtext.jpg" width="646" height="433" /></p>
+<p><strong>Step 5.</strong> Save  neural network </p>
+<p>To save the neural network as Java component click [Main menu &gt; File &gt; Save] and use the .nnet extension. The network will be saved as seralized <em>MultiLayerPerceptron</em> class. </p>
+<p><img src="images/savetextnet.jpg" width="875" height="609" /> </p>
+<h3>2. Using Neuroph Text Recognition in Your Applications</h3>
+<p>TODO</p>
+<p>&nbsp;</p>
+</body>
+</html>
+

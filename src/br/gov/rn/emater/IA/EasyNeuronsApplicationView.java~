@@ -1,0 +1,223 @@
+/*
+ * EasyNeuronsApplicationView.java
+ * odraditi serijalizaciju i snimanje (treba dodati lokaciju kao promenjivu u neural net i training set)
+ */
+package br.gov.rn.emater.IA;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.Timer;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.tree.DefaultMutableTreeNode;
+import org.jdesktop.application.FrameView;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.SingleFrameApplication;
+import org.neuroph.core.NeuralNetwork;
+import org.neuroph.core.Neuron;
+import org.neuroph.core.learning.TrainingSet;
+import br.gov.rn.emater.IA.dialog.NeuronPropertiesFrame;
+import br.gov.rn.emater.IA.errorgraph.GraphFrame;
+import br.gov.rn.emater.IA.file.WindowObserver;
+import br.gov.rn.emater.IA.dialog.SupervisedTrainingMonitorFrame;
+
+/*
+ * 
+ */
+public class EasyNeuronsApplicationView extends JFrame implements
+        Serializable {
+
+
+
+    public EasyNeuronsApplicationView() {
+    //public EasyNeuronsApplicationView(SingleFrameApplication app) {
+        //super(app);
+        initComponents();
+        
+        //ResourceMap resourceMap = getResourceMap();
+        //int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
+        int messageTimeout = 0;
+        messageTimer = new Timer(messageTimeout, new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+       messageTimer.setRepeats(false);
+
+        //JFrame mainFrame2 = this.getFrame();
+        //mainFrame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.easyNeuronsProject = new EasyNeuronsProject();
+        this.updateProjectTree();
+        desktopPanel.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+        this.myInstance = this;
+        projectManager = new ProjectManager(easyNeuronsProject);
+        imageRecognitionSample();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed"
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        mainPanel = new javax.swing.JPanel();
+        desktopPanel = new javax.swing.JDesktopPane();
+
+        mainPanel.setName("mainPanel"); // NOI18N
+        mainPanel.setPreferredSize(new java.awt.Dimension(900, 600));
+
+        desktopPanel.setName("desktopPanel"); // NOI18N
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(desktopPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(desktopPanel)
+        );
+
+        setComponent(mainPanel);
+    }// </editor-fold>//GEN-END:initComponents
+
+    public void updateProjectTree() {
+    }
+
+    public void updateFrameTitles() {
+        JInternalFrame frames[] = desktopPanel.getAllFrames();
+        for (int i = 0; i < frames.length; i++) {
+            ((NeuralNetworkViewFrame) frames[i]).updateTitle();
+        }
+    }
+
+    public void openNetworkViewFrame(NeuralNetwork nnet) {
+        NeuralNetworkViewFrame networkViewFrame = new NeuralNetworkViewFrame(
+                nnet, easyNeuronsProject.getTrainingSets());
+
+        networkViewFrame.addInternalFrameListener(new WindowObserver(networkViewFrame) {
+
+            @Override
+            public void internalFrameActivated(InternalFrameEvent e) {
+                netActiveWindow = nn;
+                traActiveWindow = null;
+            }
+        });
+
+        networkViewFrame.setVisible(true);
+
+        desktopPanel.add(networkViewFrame);
+        try {
+            networkViewFrame.setSelected(true);
+            networkViewFrame.setMaximum(true);
+        } catch (java.beans.PropertyVetoException e) {
+        }
+    }
+
+    public static EasyNeuronsApplicationView getInstance() {
+        return myInstance;
+    }
+
+    public void openNeuronPropertiesFrame(Neuron neuron) {
+        NeuronPropertiesFrame neuronPropertiesFrame = new NeuronPropertiesFrame(neuron);
+
+        neuronPropertiesFrame.setVisible(true);
+
+        desktopPanel.add(neuronPropertiesFrame);
+        try {
+            neuronPropertiesFrame.setSelected(true);
+        } catch (java.beans.PropertyVetoException e) {
+        }
+    }
+
+    public void showTrainingSetEditFrame(int inputs, int outputs, String type, String label) {
+
+        TrainingSet trainingSet = new TrainingSet(label);
+        TrainingSetEditFrame trainingSetEditFrame = new TrainingSetEditFrame(trainingSet, type, inputs, outputs);
+        trainingSetEditFrame.setVisible(true);
+
+        desktopPanel.add(trainingSetEditFrame);
+        try {
+            trainingSetEditFrame.setSelected(true);
+        } catch (java.beans.PropertyVetoException e) {
+        }
+    }
+
+    public SupervisedTrainingMonitorFrame openMonitorFrame(NeuralNetworkTraining trainingController) {
+        SupervisedTrainingMonitorFrame monitorFrame = new SupervisedTrainingMonitorFrame(trainingController);
+
+        monitorFrame.setVisible(true);
+        desktopPanel.add(monitorFrame);
+        try {
+            monitorFrame.setSelected(true);
+        } catch (java.beans.PropertyVetoException e) {
+        }
+
+        return monitorFrame;
+
+    }
+
+    public GraphFrame openErrorGraphFrame() {
+        JInternalFrame iframes[] = desktopPanel.getAllFrames();
+        for (int i = 0; i < iframes.length; i++) {
+            if (iframes[i] instanceof GraphFrame) {
+
+                try {
+                    iframes[i].setSelected(true);
+                } catch (java.beans.PropertyVetoException e) {
+                }
+
+                return (GraphFrame) iframes[i];
+            }
+        }
+
+        GraphFrame graphFrame = new GraphFrame();
+
+        graphFrame.setVisible(true);
+        desktopPanel.add(graphFrame);
+        try {
+            graphFrame.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(EasyNeuronsApplicationView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+        return graphFrame;
+    }
+
+    public void imageRecognitionSample() {
+        br.gov.rn.emater.IA.imgrec.ImageRecognitionFrame sample = new br.gov.rn.emater.IA.imgrec.ImageRecognitionFrame();
+        sample.setVisible(true);
+        desktopPanel.add(sample);
+        try {
+            sample.setSelected(true);
+        } catch (java.beans.PropertyVetoException e) {
+        }
+
+    }
+
+    public EasyNeuronsProject getProject() {
+        return this.easyNeuronsProject;
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane desktopPanel;
+    private javax.swing.JPanel mainPanel;
+    // End of variables declaration//GEN-END:variables
+    private final Timer messageTimer;
+    protected DefaultMutableTreeNode SelectedNode;
+    private static final long serialVersionUID = 1L;
+    int counter = 0;
+    public static EasyNeuronsApplicationView myInstance;
+    private EasyNeuronsProject easyNeuronsProject;
+    private NeuralNetworkViewFrame netActiveWindow = null;
+    private TrainingSet traActiveWindow = null;
+    private ProjectManager projectManager;
+// DragNDrop - end
+}
